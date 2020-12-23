@@ -27,7 +27,9 @@ router.post('/login', async (ctx) => {
     const credentials = ctx.request.body;
 
     const response = ctx.response;
+    console.log(credentials)
     const user = await userStore.findOne({ email: credentials.email });
+
     if (user && credentials.parola === user.parola) {
         response.body = { token: createToken(user) };
         response.status = 201; // created
