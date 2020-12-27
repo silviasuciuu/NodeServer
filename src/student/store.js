@@ -20,7 +20,8 @@ export class StudentStore {
         if (!nume || !prenume || !grupa ) { // validation
             throw new Error('Something is missing');
         }
-        return this.store.insert(student);
+
+            return this.store.insert(student);
     };
 
     async update(props, student) {
