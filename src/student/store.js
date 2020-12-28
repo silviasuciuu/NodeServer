@@ -31,6 +31,8 @@ export class StudentStore {
     async remove(props) {
         return this.store.remove(props);
     }
+
+
 }
 
 export default new StudentStore({ filename: './db/students.json', autoload: true });
