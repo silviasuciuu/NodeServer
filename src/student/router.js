@@ -30,7 +30,35 @@ router.get('/:id', async (ctx) => {
     }
 });
 
+router.put('/:id', async (ctx) => {
+    const st = ctx.request.body;
+    const id = ctx.params.id;
+    const stId = st._id;
+    const response = ctx.response;
+    if (stId && stId !== id) {
+        response.body = { message: 'Param id and body _id should be the same' };
+        response.status = 400; // bad request
+        return;
+    }
+    if (!stId) {
+        await createStudent(ctx, st, response);
+    } else {
+        const userId = ctx.state.user._id;
+        st.userId = userId;
+        st.grupa=ctx.state.user.grupa;
+        st.active="false";
 
+        const updatedCount = await studentStore.update({ _id: id }, st);
+        if (updatedCount === 1) {
+            response.body =st;
+            response.status = 200; // ok
+            broadcast(userId, { type: 'updated', payload: st });
+        } else {
+            response.body = { message: 'Resource no longer exists' };
+            response.status = 405; // method not allowed
+        }
+    }
+});
 
 const createStudent = async (ctx, student, response) => {
     try {
